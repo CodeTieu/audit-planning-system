@@ -1,0 +1,95 @@
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+MANIFEST
+
+# ── Virtual environments ───────────────────────────────────
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# ── Django ─────────────────────────────────────────────────
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+.django_secret_key
+
+# ── Environment / secrets ──────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+*.crt
+secrets/
+
+# ── Node / Vite / React ────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# ── Editors ────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── OS files ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Test / coverage ────────────────────────────────────────
+.coverage
+.coverage.*
+.pytest_cache/
+.cache/
+htmlcov/
+.tox/
+.nox/
+*.cover
+.hypothesis/
+
+# ── Exports / generated artifacts ──────────────────────────
+exports_output/
+export_packages/
+*.zip
+
+# ── Excel / temp files ─────────────────────────────────────
+~$*.xlsx
+~$*.docx
+*.tmp
+
+# ── Backend log/data ───────────────────────────────────────
+celerybeat-schedule
+celerybeat.pid

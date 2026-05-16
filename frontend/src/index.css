@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1e3a5f;
+  --color-primary-50: #e8edf4;
+  --color-primary-100: #c5d0e3;
+  --color-primary-200: #9fb0ce;
+  --color-primary-300: #7990b9;
+  --color-primary-400: #5c78aa;
+  --color-primary-500: #3f609b;
+  --color-primary-600: #355490;
+  --color-primary-700: #284580;
+  --color-primary-800: #1e3a5f;
+  --color-primary-900: #0f2240;
+
+  --color-secondary: #c9952a;
+  --color-secondary-50: #fdf8ee;
+  --color-secondary-100: #f9ecd0;
+  --color-secondary-200: #f3d9a0;
+  --color-secondary-300: #ecc26a;
+  --color-secondary-400: #e4aa3f;
+  --color-secondary-500: #c9952a;
+  --color-secondary-600: #b07e20;
+  --color-secondary-700: #8d641a;
+  --color-secondary-800: #6e4e18;
+  --color-secondary-900: #5a4016;
+
+  --color-success: #166534;
+  --color-success-50: #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+
+  --color-warning: #92400e;
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+
+  --color-danger: #991b1b;
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+
+  --color-sidebar: #0f2240;
+  --color-background: #f8fafc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
