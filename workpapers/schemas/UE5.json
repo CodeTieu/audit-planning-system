@@ -1,0 +1,193 @@
+{
+  "code": "UE5",
+  "version": 2,
+  "title": "UE 5 — Fraud Considerations",
+  "subtitle": "Section A: 11 fraud considerations with auto-classification",
+  "issai_reference": "ISSAI 2240 / ISA 240 — The Auditor's Responsibilities Relating to Fraud in an Audit of FS",
+  "documentation_framework": "PSREC",
+  "psrec_note": "ISSAI 2240 anchors: Q3 (management override) is a PRESUMED FRAUD RISK requiring JE testing regardless of answer. Revenue-related questions are presumed fraud risks. Any 'Yes' answer triggers a row on the Risks Identified register.",
+  "sections": [
+    {
+      "id": "SA",
+      "number": "A",
+      "title": "Fraud Risk Considerations",
+      "guidance": "Yellow = auditor input. Orange = risk identified. Green = clear. Apply PSREC for the Record of Work Done on every question.",
+      "questions": [
+        {
+          "id": "SA_Q1",
+          "ref": "A.1",
+          "type": "yes_no_na",
+          "text": "Has management identified any fraud or suspected fraud during the period, and what was the response?",
+          "required": true,
+          "evidence_fields": true,
+          "guidance": "A Yes answer triggers immediate escalation requirements under ISSAI 2240.",
+          "risk_polarity": "yes",
+          "severity": "High",
+          "is_pervasive": true,
+          "is_cotabd_specific": false,
+          "assertions": ["Occurrence", "Completeness", "Accuracy"],
+          "risk_description": "Fraud identified or suspected by management — immediate escalation required under ISSAI 2240.",
+          "inherent_risk_factor": "Identified or suspected fraud is a fundamental indicator of risk affecting the integrity of financial reporting and the control environment."
+        },
+        {
+          "id": "SA_Q2",
+          "ref": "A.2",
+          "type": "yes_no_na",
+          "text": "Are employees or non-management personnel aware of any instances where management has not responded appropriately to identified misstatements?",
+          "evidence_fields": true,
+          "risk_polarity": "yes",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Accuracy"],
+          "risk_description": "Misstatements not addressed by management — tone-at-the-top and override risk.",
+          "inherent_risk_factor": "Failure to respond appropriately to known misstatements indicates a weak control environment and potential management override."
+        },
+        {
+          "id": "SA_Q3",
+          "ref": "A.3",
+          "type": "yes_no_na",
+          "text": "Are there incentives or pressures on management that could lead to fraudulent financial reporting?",
+          "evidence_fields": true,
+          "guidance": "ISSAI 2240 ¶31: management override of controls is a PRESUMED FRAUD RISK — JE testing is mandatory regardless of this answer.",
+          "risk_polarity": "yes",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Accuracy"],
+          "risk_description": "Management fraud incentives/pressures identified.",
+          "inherent_risk_factor": "Identified fraud incentives or pressures on management increase the likelihood of intentional misstatement."
+        },
+        {
+          "id": "SA_Q4",
+          "ref": "A.4",
+          "type": "yes_no_na",
+          "text": "Have significant or unusual transactions occurred during the year (e.g., large year-end transactions, related-party transactions, related-party balances)?",
+          "evidence_fields": true,
+          "risk_polarity": "yes",
+          "severity": "Medium",
+          "is_pervasive": false,
+          "is_cotabd_specific": true,
+          "assertions": ["Existence", "Accuracy", "Cut-off"],
+          "risk_description": "Significant or unusual transactions identified — heightened audit risk in procurement, accruals, capex.",
+          "inherent_risk_factor": "Unusual or complex transactions increase the risk of misstatement, particularly where they are non-recurring or involve related parties."
+        },
+        {
+          "id": "SA_Q5",
+          "ref": "A.5",
+          "type": "yes_no_na",
+          "text": "Are there indications of unusual or material expenses (such as travel, subsistence, entertainment, allowances)?",
+          "evidence_fields": true,
+          "risk_polarity": "yes",
+          "severity": "Medium",
+          "is_pervasive": false,
+          "is_cotabd_specific": true,
+          "assertions": ["Existence", "Accuracy", "Classification", "Cut-off"],
+          "risk_description": "Unusual or material expenses identified — potential misappropriation risk.",
+          "inherent_risk_factor": "Unusual or material discretionary expenses may indicate misappropriation, ghost employees or misclassification."
+        },
+        {
+          "id": "SA_Q6",
+          "ref": "A.6",
+          "type": "yes_no_na",
+          "text": "Has management displayed behaviours that undermine auditor confidence (e.g., delays in providing information, restrictions on access)?",
+          "evidence_fields": true,
+          "risk_polarity": "yes",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Completeness", "Accuracy"],
+          "risk_description": "Management behaviour undermines auditor confidence — potential scope limitation.",
+          "inherent_risk_factor": "Behaviour that obstructs the audit may indicate concealment of misstatement and constitutes a pervasive risk to the engagement."
+        },
+        {
+          "id": "SA_Q7",
+          "ref": "A.7",
+          "type": "yes_no_na",
+          "text": "Do performance measures, KPIs, or external pressures exist that may create incentives for fraudulent financial reporting?",
+          "evidence_fields": true,
+          "risk_polarity": "yes",
+          "severity": "Medium",
+          "is_pervasive": false,
+          "is_cotabd_specific": true,
+          "assertions": ["Existence", "Completeness", "Accuracy", "Valuation"],
+          "risk_description": "Performance pressure creates incentive for fraudulent financial reporting (especially revenue, provisions, accruals).",
+          "inherent_risk_factor": "External or internal performance pressure incentivises bias in estimates, revenue recognition and accrual timing."
+        },
+        {
+          "id": "SA_Q8",
+          "ref": "A.8",
+          "type": "yes_no_na",
+          "text": "Has management assessed the risk of fraud in the entity and implemented procedures to mitigate it?",
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Completeness"],
+          "risk_description": "Management has not performed a fraud risk assessment — weak fraud governance.",
+          "inherent_risk_factor": "The absence of a management-led fraud risk assessment indicates an immature fraud governance environment, increasing inherent fraud risk."
+        },
+        {
+          "id": "SA_Q9",
+          "ref": "A.9",
+          "type": "yes_no_na",
+          "text": "Has the presumed risk of fraud in revenue recognition been considered, and if rebutted, has it been documented?",
+          "evidence_fields": true,
+          "guidance": "ISSAI 2240 ¶26: revenue recognition is a PRESUMED FRAUD RISK. Rebuttal must be documented.",
+          "risk_polarity": "no",
+          "severity": "High",
+          "is_pervasive": false,
+          "is_cotabd_specific": true,
+          "assertions": ["Occurrence", "Cut-off", "Accuracy", "Completeness"],
+          "risk_description": "Revenue recognition fraud risk not considered or rebuttal not documented — ISSAI 2240 non-compliance.",
+          "inherent_risk_factor": "Revenue is a presumed fraud risk; failure to document consideration or rebuttal exposes the audit to ISSAI 2240 compliance risk and undocumented risk acceptance."
+        },
+        {
+          "id": "SA_Q10",
+          "ref": "A.10",
+          "type": "yes_no_na",
+          "text": "Have inquiries been made of internal audit (where the function exists) regarding fraud-related work performed?",
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": false,
+          "assertions": ["Completeness"],
+          "risk_description": "Internal audit not consulted on fraud — corroborative evidence missing.",
+          "inherent_risk_factor": "Failure to consult internal audit on fraud-related work weakens the auditor's risk assessment process under ISSAI 2240."
+        },
+        {
+          "id": "SA_Q11",
+          "ref": "A.11",
+          "type": "yes_no_na",
+          "text": "Has the engagement team held a discussion (fraud brainstorming) on susceptibility of the FS to material misstatement due to fraud?",
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Completeness", "Accuracy"],
+          "risk_description": "No engagement team fraud brainstorming — ISSAI 2240 ¶15 non-compliance.",
+          "inherent_risk_factor": "Failure to conduct a documented fraud brainstorming session at planning indicates the team has not formally considered susceptibility to fraud — a pervasive engagement-level weakness."
+        },
+        {
+          "id": "SA_TOTAL",
+          "ref": "—",
+          "type": "calculated",
+          "text": "Total fraud risks identified",
+          "calculation": "yes_count",
+          "from_questions": ["SA_Q1", "SA_Q2", "SA_Q3", "SA_Q4", "SA_Q5", "SA_Q6", "SA_Q7"]
+        },
+        {
+          "id": "SA_OVERALL",
+          "ref": "—",
+          "type": "calculated",
+          "text": "Overall Fraud Risk Conclusion",
+          "calculation": "weighted_score",
+          "from_questions": ["SA_Q1", "SA_Q2", "SA_Q3", "SA_Q4", "SA_Q5", "SA_Q6", "SA_Q7"],
+          "bands": [
+            {"max": 1, "label": "Low",    "color": "#16a34a"},
+            {"max": 3, "label": "Medium", "color": "#d97706"},
+            {"max": 99, "label": "High",  "color": "#dc2626"}
+          ]
+        }
+      ]
+    }
+  ],
+  "required_for_submission": ["SA_Q1", "SA_Q9", "SA_Q11"]
+}

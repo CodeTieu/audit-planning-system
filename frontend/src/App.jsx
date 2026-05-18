@@ -37,7 +37,10 @@ import ExportPage from './pages/exports/ExportPage'
 // ─────────────────────────────────────────────────────────────
 // Workpapers that have been migrated to the schema-driven renderer.
 // As each form's JSON schema is authored, move its code to this set.
-const SCHEMA_DRIVEN_CODES = new Set(['UE1'])
+const SCHEMA_DRIVEN_CODES = new Set(['UE1', 'UE5', 'P1', 'FRF', 'PE2'])
+
+// FRF is the legacy code; P1 is the new name. Both route to the P1 schema.
+const SCHEMA_ALIASES = { FRF: 'P1' }
 
 const WORKPAPER_PAGES = {
   FRF:   FRFPage,
@@ -61,7 +64,8 @@ function WorkpaperRouter() {
 
   // Schema-driven path — bypasses the per-form components
   if (code && SCHEMA_DRIVEN_CODES.has(code)) {
-    return <SchemaPage docCode={code} />
+    const schemaCode = SCHEMA_ALIASES[code] || code
+    return <SchemaPage docCode={schemaCode} />
   }
 
   const PageComponent = WORKPAPER_PAGES[code]

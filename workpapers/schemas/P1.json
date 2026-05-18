@@ -1,0 +1,245 @@
+{
+  "code": "P1",
+  "version": 1,
+  "title": "P1 — Evaluation of the Financial Reporting Framework",
+  "subtitle": "Evaluating the Acceptability of the Financial Reporting Framework (FRF)",
+  "issai_reference": "ISSAI 2210 ¶6(a) — Preconditions for an Audit",
+  "documentation_framework": "PSREC",
+  "psrec_note": "Apply the ISSAI 2210 hierarchy sequentially in Section 2. Then corroborate with the five-attribute assessment (Section 3). Conclude on engagement acceptability in Section 4.",
+  "sections": [
+    {
+      "id": "S1",
+      "number": 1,
+      "title": "Identification & Context",
+      "guidance": "Identify the FRF being used, its purpose, and the legal basis (if any).",
+      "questions": [
+        {
+          "id": "S1_Q1",
+          "ref": "1.1",
+          "type": "select",
+          "text": "Name of identified Financial Reporting Framework (FRF)",
+          "required": true,
+          "lookup_code": "REPORTING_FRAMEWORK"
+        },
+        {
+          "id": "S1_Q2",
+          "ref": "1.2",
+          "type": "textarea",
+          "text": "Purpose of the financial statements (General Purpose / Special Purpose)",
+          "required": true,
+          "guidance": "Per the IPSAS / IFRS Conceptual Framework."
+        },
+        {
+          "id": "S1_Q3",
+          "ref": "1.3",
+          "type": "yes_no_na",
+          "text": "Based on the entity's nature / business model, is the identified FRF acceptable for the intended use of the FS?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Presentation", "Accuracy"],
+          "risk_description": "FRF not appropriate to the entity's nature — pervasive risk to the entire engagement.",
+          "inherent_risk_factor": "Use of an FRF that does not fit the entity's business model produces statements that may not present a true and fair view."
+        },
+        {
+          "id": "S1_Q4",
+          "ref": "1.4",
+          "type": "yes_no_na",
+          "text": "Is the FRF required by law or regulation?",
+          "required": true,
+          "evidence_fields": true,
+          "guidance": "If Yes, Check A of the ISSAI 2210 hierarchy is satisfied and the FRF is presumed acceptable."
+        },
+        {
+          "id": "S1_Q5",
+          "ref": "1.5",
+          "type": "textarea",
+          "text": "Legal / regulatory source of the FRF mandate (if any)",
+          "guidance": "e.g. NBAA Technical Pronouncement No. 1 of 2018; Public Finance Act, Cap 348."
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "number": 2,
+      "title": "ISSAI 2210 Hierarchy",
+      "guidance": "Apply sequentially. Stop at the first check that is satisfied.",
+      "questions": [
+        {
+          "id": "S2_QA",
+          "ref": "A",
+          "type": "yes_no_na",
+          "text": "A. Is the FRF prescribed by law or regulation for general-purpose financial statements?",
+          "required": true,
+          "evidence_fields": true,
+          "guidance": "If Yes → FRF is presumed ACCEPTABLE. The hierarchy stops here."
+        },
+        {
+          "id": "S2_QB",
+          "ref": "B",
+          "type": "yes_no_na",
+          "text": "B. Is the FRF set by an authorised or recognised standard-setting organisation?",
+          "evidence_fields": true,
+          "guidance": "Only assess if Check A is No."
+        },
+        {
+          "id": "S2_QC",
+          "ref": "C",
+          "type": "yes_no_na",
+          "text": "C. If neither A nor B, is the framework constructed by management/TCWG on a justifiable basis?",
+          "evidence_fields": true,
+          "guidance": "Only assess if A and B are both No.",
+          "risk_polarity": "no",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Presentation", "Accuracy", "Completeness"],
+          "risk_description": "FRF fails all three ISSAI 2210 hierarchy checks — engagement should not be accepted without modification.",
+          "inherent_risk_factor": "When none of the hierarchy checks are met, the FRF cannot be presumed acceptable and the auditor must consider declining the engagement."
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": 3,
+      "title": "Five Attributes Assessment",
+      "guidance": "Even where the FRF is presumed acceptable under Check A, corroborate against the five qualitative attributes. Any 'No' triggers further consideration.",
+      "questions": [
+        {
+          "id": "S3_RELEVANCE",
+          "ref": "3.1",
+          "type": "yes_no_na",
+          "text": "Relevance — Does the information relate to the nature of the entity and the purpose of the FS?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Presentation"],
+          "risk_description": "FRF attribute failure — Relevance.",
+          "inherent_risk_factor": "FRF does not produce information relevant to users — affects engagement acceptability."
+        },
+        {
+          "id": "S3_COMPLETENESS",
+          "ref": "3.2",
+          "type": "yes_no_na",
+          "text": "Completeness — Does the FRF cover all material transactions, events, balances and disclosures?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Completeness"],
+          "risk_description": "FRF attribute failure — Completeness.",
+          "inherent_risk_factor": "Material gaps in the FRF leave classes of transactions or disclosures unaddressed."
+        },
+        {
+          "id": "S3_RELIABILITY_I",
+          "ref": "3.3",
+          "type": "yes_no_na",
+          "text": "Reliability (i) — Does the information reflect the economic substance of events and transactions?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Accuracy", "Presentation"],
+          "risk_description": "FRF attribute failure — Reliability (substance over form).",
+          "inherent_risk_factor": "The FRF does not require substance-over-form representation, undermining reliability."
+        },
+        {
+          "id": "S3_RELIABILITY_II",
+          "ref": "3.4",
+          "type": "yes_no_na",
+          "text": "Reliability (ii) — Does the framework allow reasonably consistent evaluation, measurement, presentation and disclosure?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Accuracy", "Presentation"],
+          "risk_description": "FRF attribute failure — Reliability (consistency).",
+          "inherent_risk_factor": "Inconsistent recognition or measurement bases impair comparability and reliability."
+        },
+        {
+          "id": "S3_NEUTRALITY",
+          "ref": "3.5",
+          "type": "yes_no_na",
+          "text": "Neutrality — Is the information free from bias?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Accuracy"],
+          "risk_description": "FRF attribute failure — Neutrality.",
+          "inherent_risk_factor": "The FRF does not enforce neutrality, potentially permitting biased recognition or presentation."
+        },
+        {
+          "id": "S3_UNDERSTANDABILITY",
+          "ref": "3.6",
+          "type": "yes_no_na",
+          "text": "Understandability — Is the information clear, comprehensive, and not subject to significantly different interpretations?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "Medium",
+          "is_pervasive": true,
+          "assertions": ["Presentation", "Understandability"],
+          "risk_description": "FRF attribute failure — Understandability.",
+          "inherent_risk_factor": "Ambiguous or inaccessible disclosures permit divergent interpretations by users."
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": 4,
+      "title": "Conclusion & Engagement Acceptance",
+      "questions": [
+        {
+          "id": "S4_Q1",
+          "ref": "4.1",
+          "type": "select",
+          "text": "Overall conclusion on FRF acceptability",
+          "required": true,
+          "options": ["Acceptable", "Acceptable with reservations", "Not Acceptable"],
+          "risk_polarity": null,
+          "triggers": [
+            {
+              "id": "P1_NOT_ACCEPTABLE",
+              "match_kind": "value_equals",
+              "match_value": "Not Acceptable",
+              "risk_description": "Financial reporting framework is not acceptable — engagement should not be accepted without modification.",
+              "inherent_risk_factor": "An unacceptable FRF undermines the basis for the auditor's opinion. The engagement should be declined or accepted only with a modified report.",
+              "severity": "High",
+              "is_pervasive": true,
+              "is_cotabd_specific": false,
+              "assertions": ["Presentation", "Accuracy", "Completeness"]
+            }
+          ]
+        },
+        {
+          "id": "S4_Q2",
+          "ref": "4.2",
+          "type": "select",
+          "text": "Engagement acceptance decision",
+          "required": true,
+          "options": [
+            "ACCEPTS the audit engagement",
+            "ACCEPTS subject to communication of modification",
+            "DOES NOT ACCEPT the audit engagement"
+          ]
+        },
+        {
+          "id": "S4_Q3",
+          "ref": "4.3",
+          "type": "textarea",
+          "text": "Reason (if Not Acceptable, or if accepted with reservation)",
+          "guidance": "Required when S4_Q1 is anything other than 'Acceptable'."
+        }
+      ]
+    }
+  ],
+  "required_for_submission": ["S1_Q1", "S1_Q2", "S1_Q4", "S2_QA", "S4_Q1", "S4_Q2"]
+}

@@ -22,9 +22,121 @@ Select fields keep their original casing (e.g. 'Follow-up Audit', 'High').
 
 from django.utils import timezone
 
+from .schema_loader import get_schema
+
 
 # ─────────────────────────────────────────────────────────────
-# COMPLEX CONDITION HELPERS
+# SCHEMA-DRIVEN RULE COMPILER
+# ─────────────────────────────────────────────────────────────
+# When a workpaper has a JSON schema in workpapers/schemas/<CODE>.json,
+# rules are compiled from it on the fly. This lets us author new
+# workpapers purely as JSON without touching this file.
+#
+# Supported match_kind values:
+#   - "any_row_field_equals" : for table questions; matches if ANY row's
+#                              field == match_value (e.g. personnel status='Vacant')
+#   - "value_equals"         : for scalar fields; matches if value == match_value
+#
+# A question may also declare `risk_polarity`: 'no' or 'yes' to mean
+# "answering this way fires a generic risk", with optional severity/etc.
+# fields on the question itself.
+
+def _make_condition(match_kind, match_field, match_value, question_id):
+    """Return a callable(form_data) -> bool for the given match descriptor."""
+    if match_kind == 'any_row_field_equals':
+        def cond(form_data, qid=question_id, mf=match_field, mv=match_value):
+            rows = form_data.get(qid, []) or []
+            return any(
+                isinstance(r, dict) and r.get(mf) == mv
+                for r in rows
+            )
+        return cond
+
+    if match_kind == 'value_equals':
+        def cond(form_data, qid=question_id, mv=match_value):
+            return form_data.get(qid) == mv
+        return cond
+
+    # Fallback: never fire
+    return lambda form_data: False
+
+
+def _trigger_descriptor_to_rule(question, trigger):
+    """Convert a schema `trigger` dict on a `question` into a `TRIGGER_RULES`-shaped dict."""
+    mk = trigger.get('match_kind')
+    mv = trigger.get('match_value')
+    mf = trigger.get('match_field')
+    qid = question['id']
+    captured_answer = mv if mk == 'any_row_field_equals' else mv
+
+    return {
+        'id': trigger['id'],
+        'source_section': qid,
+        'trigger_question': question.get('text', qid),
+        'condition': _make_condition(mk, mf, mv, qid),
+        'get_answer': lambda fd, _a=captured_answer: str(_a),
+        'risk_description':    trigger['risk_description'],
+        'inherent_risk_factor': trigger.get('inherent_risk_factor', ''),
+        'severity':             trigger.get('severity', 'Medium'),
+        'is_pervasive':         bool(trigger.get('is_pervasive', False)),
+        'is_cotabd_specific':   bool(trigger.get('is_cotabd_specific', False)),
+        'assertions':           trigger.get('assertions', []),
+        'dedup_key': lambda fd, rule: rule['id'],
+    }
+
+
+def _polarity_rule(question):
+    """Convert a polarity-flagged question (risk_polarity='no'/'yes') into a rule."""
+    polarity = str(question.get('risk_polarity', '')).lower()
+    if polarity not in ('yes', 'no'):
+        return None
+    qid = question['id']
+
+    def cond(form_data, _qid=qid, _p=polarity):
+        v = form_data.get(_qid)
+        return v is not None and str(v).lower() == _p
+
+    return {
+        'id': f"{qid}_POLARITY",
+        'source_section': qid,
+        'trigger_question': question.get('text', qid),
+        'condition': cond,
+        'get_answer': lambda fd, _a=polarity: _a.capitalize(),
+        'risk_description':     question.get('risk_description',
+                                             f"{question.get('text', qid)} — answer triggers a risk."),
+        'inherent_risk_factor': question.get('inherent_risk_factor', ''),
+        'severity':             question.get('severity', 'Medium'),
+        'is_pervasive':         bool(question.get('is_pervasive', False)),
+        'is_cotabd_specific':   bool(question.get('is_cotabd_specific', False)),
+        'assertions':           question.get('assertions', []),
+        'dedup_key': lambda fd, rule: rule['id'],
+    }
+
+
+def compile_rules_from_schema(code):
+    """
+    Return a list of rule dicts derived from the JSON schema for `code`.
+    Returns an empty list if no schema is found.
+    """
+    schema = get_schema(code)
+    if not schema:
+        return []
+
+    rules = []
+    for section in schema.get('sections', []):
+        for q in section.get('questions', []):
+            # Triggers attached to the question (table-row matchers etc.)
+            for t in (q.get('triggers') or []):
+                rules.append(_trigger_descriptor_to_rule(q, t))
+            # Polarity-based
+            pol = _polarity_rule(q)
+            if pol:
+                rules.append(pol)
+    return rules
+
+
+# ─────────────────────────────────────────────────────────────
+# COMPLEX CONDITION HELPERS  (legacy — used by hardcoded TRIGGER_RULES below)
 # ─────────────────────────────────────────────────────────────
 
 def _personnel_acting_condition(form_data):
@@ -57,68 +169,9 @@ def _is_no(form_data, key):   return form_data.get(key) == 'no'
 # ─────────────────────────────────────────────────────────────
 
 TRIGGER_RULES = {
-    # ── UE1: General Information ──────────────────────────────────────────────
-    'UE1': [
-        {
-            'id': 'UE1_ACTING_PERSONNEL',
-            'source_section': 'S3_Q1',
-            'trigger_question': 'Are any key personnel serving in an acting capacity for 6+ months?',
-            'condition': _personnel_acting_condition,
-            'get_answer': lambda fd: 'Acting (6+ months)',
-            'risk_description': (
-                'Key personnel in acting positions — risk of management instability '
-                'and lack of accountability in financial reporting.'
-            ),
-            'inherent_risk_factor': (
-                'Extended acting appointments indicate instability in management, '
-                'which may affect the reliability of internal controls and financial reporting.'
-            ),
-            'severity': 'Medium',
-            'is_pervasive': True,
-            'is_cotabd_specific': False,
-            'assertions': ['Completeness', 'Accuracy'],
-            'dedup_key': lambda fd, rule: rule['id'],
-        },
-        {
-            'id': 'UE1_VACANT_POSITION',
-            'source_section': 'S3_Q1',
-            'trigger_question': 'Are any key positions currently vacant?',
-            'condition': _personnel_vacant_condition,
-            'get_answer': lambda fd: 'Vacant',
-            'risk_description': (
-                'Key position vacant — risk of oversight gaps and weakened internal controls.'
-            ),
-            'inherent_risk_factor': (
-                'Vacant key positions create gaps in management oversight '
-                'and may impair the functioning of internal controls.'
-            ),
-            'severity': 'High',
-            'is_pervasive': True,
-            'is_cotabd_specific': False,
-            'assertions': ['Completeness', 'Accuracy'],
-            'dedup_key': lambda fd, rule: rule['id'],
-        },
-        {
-            'id': 'UE1_FOLLOWUP_ENGAGEMENT',
-            'source_section': 'S4_Q1',
-            'trigger_question': 'Is this a follow-up audit engagement?',
-            'condition': lambda fd: fd.get('S4_Q1') == 'Follow-up Audit',
-            'get_answer': lambda fd: 'Follow-up Audit',
-            'risk_description': (
-                'Prior year findings unresolved — follow-up engagement indicates '
-                'previously identified issues may still be present.'
-            ),
-            'inherent_risk_factor': (
-                'Follow-up engagements arise from prior audit findings that were not '
-                'fully remediated, indicating a risk that similar misstatements persist.'
-            ),
-            'severity': 'Medium',
-            'is_pervasive': False,
-            'is_cotabd_specific': False,
-            'assertions': ['Occurrence', 'Completeness'],
-            'dedup_key': lambda fd, rule: rule['id'],
-        },
-    ],
+    # ── UE1: migrated to JSON schema (workpapers/schemas/UE1.json) ───────────
+    # See `compile_rules_from_schema('UE1')` for the rules. Kept here as a
+    # comment so it is obvious to future maintainers that UE1 has moved.
 
     # ── UE2: Governance Structure ────────────────────────────────────────────
     'UE2': [
@@ -1159,9 +1212,24 @@ TRIGGER_RULES = {
 # ─────────────────────────────────────────────────────────────
 
 class RiskEngine:
-    """Evaluates workpaper form_data against trigger rules and persists Risks."""
+    """Evaluates workpaper form_data against trigger rules and persists Risks.
+
+    Rule resolution order per workpaper code:
+        1. If a JSON schema exists at workpapers/schemas/<CODE>.json, use
+           rules compiled from it.
+        2. Otherwise fall back to the hardcoded TRIGGER_RULES dict below
+           (legacy path — being migrated out).
+    """
+
+    # Codes whose JSON schema lives under a different filename.
+    # e.g. the database has DocumentType.code='FRF' but the schema file is P1.json.
+    SCHEMA_CODE_ALIASES = {'FRF': 'P1'}
 
     def get_triggers_for_document(self, document_type_code):
+        schema_code = self.SCHEMA_CODE_ALIASES.get(document_type_code, document_type_code)
+        schema_rules = compile_rules_from_schema(schema_code)
+        if schema_rules:
+            return schema_rules
         return TRIGGER_RULES.get(document_type_code, [])
 
     def evaluate(self, workpaper, form_data, previous_data=None):

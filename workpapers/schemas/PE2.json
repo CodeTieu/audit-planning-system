@@ -1,0 +1,103 @@
+{
+  "code": "PE2",
+  "version": 2,
+  "title": "PE 2 / IC 2 — Engagement Team Competency Matrix",
+  "subtitle": "Competence & Capability Assessment of the Engagement Team",
+  "issai_reference": "ISSAI 2220 ¶26 — Competence and capabilities of the engagement team",
+  "documentation_framework": "PSREC",
+  "psrec_note": "The engagement partner shall be satisfied that the team, and any external experts, have the competence and capability to perform the audit and enable issuance of an appropriate audit report.",
+  "sections": [
+    {
+      "id": "S1",
+      "number": 1,
+      "title": "Engagement Partner & Acceptance",
+      "questions": [
+        {
+          "id": "S1_PARTNER",
+          "ref": "1.1",
+          "type": "text",
+          "text": "Engagement Partner name",
+          "required": true
+        },
+        {
+          "id": "S1_ENGAGEMENT_RISK",
+          "ref": "1.2",
+          "type": "select",
+          "text": "Engagement risk rating",
+          "required": true,
+          "lookup_code": "RATING_3"
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "number": 2,
+      "title": "Competency Matrix",
+      "guidance": "Add each team member as a column and rate them across the 8 competency aspects. The system flags any cell that falls below the minimum required for the member's role.",
+      "questions": [
+        {
+          "id": "S2_MATRIX",
+          "ref": "2.1",
+          "type": "matrix",
+          "text": "Team × Competency × Rating",
+          "column_label": "Team Member",
+          "column_role_lookup_code": "TEAM_ROLE",
+          "cell_lookup_code": "COMPETENCY_LEVEL",
+          "max_columns": 8,
+          "guidance": "Use the 8 competency aspects from the Lookup tab; ratings: Basic Understanding / Intermediate / Advanced."
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": 3,
+      "title": "Interventions",
+      "guidance": "Document interventions for any competency gaps flagged in the matrix.",
+      "questions": [
+        {
+          "id": "S3_INTERVENTIONS",
+          "ref": "3.1",
+          "type": "table",
+          "text": "Intervention log",
+          "columns": [
+            {"key": "competency",      "label": "Competency Area",       "type": "text",   "min_width": "200px"},
+            {"key": "intervention",    "label": "Suggested Intervention","type": "text",   "min_width": "220px"},
+            {"key": "action",          "label": "Action Taken / Plan",   "type": "text",   "min_width": "220px"},
+            {"key": "responsible",     "label": "Responsible Person",    "type": "text",   "min_width": "150px"},
+            {"key": "status",          "label": "Status",                "type": "select", "options": ["Open", "In progress", "Closed"], "min_width": "120px"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": 4,
+      "title": "Conclusion",
+      "questions": [
+        {
+          "id": "S4_Q1",
+          "ref": "4.1",
+          "type": "yes_no_na",
+          "text": "After interventions, does the engagement team have the required competencies to perform the audit?",
+          "required": true,
+          "evidence_fields": true,
+          "risk_polarity": "no",
+          "severity": "High",
+          "is_pervasive": true,
+          "assertions": ["Occurrence", "Completeness", "Accuracy"],
+          "risk_description": "Engagement team lacks required competencies — audit quality risk.",
+          "inherent_risk_factor": "An engagement team that does not meet the minimum competency thresholds creates a pervasive risk that the audit will not be performed to the required standard."
+        },
+        {
+          "id": "S4_NARRATIVE",
+          "ref": "4.2",
+          "type": "textarea",
+          "text": "Engagement Partner narrative",
+          "required": true,
+          "guidance": "Written after the Intervention Log is complete. Justify the conclusion in S4_Q1."
+        }
+      ]
+    }
+  ],
+  "required_for_submission": ["S1_PARTNER", "S1_ENGAGEMENT_RISK", "S4_Q1", "S4_NARRATIVE"]
+}

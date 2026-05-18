@@ -3,6 +3,7 @@ import FormSection from './FormSection'
 import QuestionField from './QuestionField'
 import SchemaSelect from './SchemaSelect'
 import SchemaSubTable from './SchemaSubTable'
+import SchemaMatrix from './SchemaMatrix'
 import { evaluateQuestionTriggers, evaluateAllTriggers } from './schemaTriggers'
 
 /**
@@ -129,21 +130,88 @@ export default function SchemaFormRenderer({
       )
     }
 
-    // Calculated (display-only)
-    if (q.type === 'calculated') {
-      const allFired = evaluateAllTriggers(schema, formData)
-      const count = allFired.length
+    // Matrix (rows × columns, each cell a dropdown)
+    if (q.type === 'matrix') {
       return (
-        <div key={q.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
-          <span className="text-sm text-gray-700">{q.text}</span>
-          <span className={[
-            'text-sm font-semibold px-3 py-1 rounded-full',
-            count > 0 ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800',
-          ].join(' ')}>
-            {count > 0 ? `${count} risk${count !== 1 ? 's' : ''} identified` : 'No risks identified'}
-          </span>
+        <div key={q.id} className="space-y-2">
+          <div>
+            <p className="text-sm font-semibold text-gray-800">
+              <span className="text-xs font-mono text-gray-400 mr-2">{q.ref}</span>
+              {q.text}
+            </p>
+            {q.guidance && <p className="text-xs text-gray-500 mt-0.5">{q.guidance}</p>}
+          </div>
+          <SchemaMatrix
+            value={value && typeof value === 'object' ? value : undefined}
+            onChange={(v) => handleChange(q.id, v)}
+            row_lookup_code={q.row_lookup_code}
+            column_role_lookup_code={q.column_role_lookup_code}
+            cell_lookup_code={q.cell_lookup_code}
+            column_label={q.column_label || 'Team Member'}
+            max_columns={q.max_columns || 6}
+            readOnly={readOnly}
+          />
         </div>
       )
+    }
+
+    // Calculated (display-only)
+    if (q.type === 'calculated') {
+      const calc = q.calculation || 'risk_count_for_workpaper'
+
+      if (calc === 'risk_count_for_workpaper') {
+        const allFired = evaluateAllTriggers(schema, formData)
+        const count = allFired.length
+        return (
+          <div key={q.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+            <span className="text-sm text-gray-700">{q.text}</span>
+            <span className={[
+              'text-sm font-semibold px-3 py-1 rounded-full',
+              count > 0 ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800',
+            ].join(' ')}>
+              {count > 0 ? `${count} risk${count !== 1 ? 's' : ''} identified` : 'No risks identified'}
+            </span>
+          </div>
+        )
+      }
+
+      if (calc === 'yes_count') {
+        // Count Yes answers across specified question ids
+        const ids = q.from_questions || []
+        const yesCount = ids.filter((id) => String(formData?.[id]).toLowerCase() === 'yes').length
+        return (
+          <div key={q.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+            <span className="text-sm text-gray-700">{q.text}</span>
+            <span className="text-sm font-semibold text-[#1e3a5f]">{yesCount} / {ids.length}</span>
+          </div>
+        )
+      }
+
+      if (calc === 'weighted_score') {
+        // Count Yes answers across from_questions; map to severity bands
+        const ids = q.from_questions || []
+        const yesCount = ids.filter((id) => String(formData?.[id]).toLowerCase() === 'yes').length
+        const bands = q.bands || [
+          { max: 1, label: 'Low',    color: '#16a34a' },
+          { max: 3, label: 'Medium', color: '#d97706' },
+          { max: 99, label: 'High',  color: '#dc2626' },
+        ]
+        const band = bands.find((b) => yesCount <= b.max) || bands[bands.length - 1]
+        return (
+          <div key={q.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+            <div>
+              <p className="text-sm text-gray-700">{q.text}</p>
+              <p className="text-[11px] text-gray-400">{yesCount} of {ids.length} indicators triggered</p>
+            </div>
+            <span className="px-3 py-1 rounded-full text-sm font-semibold text-white"
+              style={{ backgroundColor: band.color }}>
+              {band.label}
+            </span>
+          </div>
+        )
+      }
+
+      return null
     }
 
     // Default: text / textarea / date / yes_no_na via existing QuestionField
