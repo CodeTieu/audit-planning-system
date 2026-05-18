@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'notifications',
     'exports',
     'audit_trail',
+    'lookups',
 ]
 
 MIDDLEWARE = [

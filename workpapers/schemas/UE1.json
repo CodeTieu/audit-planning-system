@@ -1,0 +1,156 @@
+{
+  "code": "UE1",
+  "version": 2,
+  "title": "UE 1 — General Information",
+  "subtitle": "Step 1: General Information (with auto-detected risk indicators)",
+  "issai_reference": "ISSAI 2315 / ISA 315 — Understanding the entity and its environment as a risk assessment basis",
+  "documentation_framework": "PSREC",
+  "psrec_note": "Yellow = auditor input. Each filled-in 'No'/risk-triggering answer fires a row on the Risks Identified register and feeds RA 1 / RA 2.",
+  "sections": [
+    {
+      "id": "S1",
+      "number": 1,
+      "title": "Type of Entity",
+      "questions": [
+        {
+          "id": "S1_Q1",
+          "ref": "1.1",
+          "type": "select",
+          "text": "What is the type of entity being audited?",
+          "required": true,
+          "lookup_code": "ENTITY_TYPE",
+          "evidence_fields": true
+        },
+        {
+          "id": "S1_Q2",
+          "ref": "1.2",
+          "type": "select",
+          "text": "What is the reporting currency used by the entity?",
+          "required": true,
+          "lookup_code": "REPORTING_CURRENCY",
+          "evidence_fields": true
+        },
+        {
+          "id": "S1_Q3",
+          "ref": "1.3",
+          "type": "select",
+          "text": "What financial reporting framework does the entity apply?",
+          "required": true,
+          "lookup_code": "REPORTING_FRAMEWORK",
+          "evidence_fields": true
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "number": 2,
+      "title": "Address & Contact Details",
+      "questions": [
+        {"id": "S2_Q1", "ref": "2.1", "type": "text", "text": "Physical address", "required": true, "evidence_fields": true},
+        {"id": "S2_Q2", "ref": "2.2", "type": "text", "text": "Postal address (P.O. Box)", "evidence_fields": true},
+        {"id": "S2_Q3", "ref": "2.3", "type": "text", "text": "Telephone number(s)", "evidence_fields": true},
+        {"id": "S2_Q4", "ref": "2.4", "type": "text", "text": "Official email address", "evidence_fields": true},
+        {"id": "S2_Q5", "ref": "2.5", "type": "text", "text": "Website URL (if any)", "evidence_fields": true}
+      ]
+    },
+    {
+      "id": "S3",
+      "number": 3,
+      "title": "Key Management Personnel",
+      "guidance": "Per ISSAI 2315: Vacancies, long-acting durations, and substantive office holders for short tenures are inherent risk factors at the entity level.",
+      "questions": [
+        {
+          "id": "S3_Q1",
+          "ref": "3.1",
+          "type": "table",
+          "text": "List all key management positions and their current occupants.",
+          "columns": [
+            {"key": "position",    "label": "Position",          "type": "select", "lookup_code": "KEY_POSITION", "min_width": "200px"},
+            {"key": "name",        "label": "Full Name",         "type": "text",   "min_width": "160px"},
+            {"key": "status",      "label": "Status",            "type": "select", "lookup_code": "PERSONNEL_STATUS", "min_width": "130px"},
+            {"key": "period_band", "label": "Period Served",     "type": "select", "lookup_code": "PERIOD_SERVED_BAND", "min_width": "140px"},
+            {"key": "contact",     "label": "Contact (email/phone)", "type": "text", "min_width": "160px"},
+            {"key": "notes",       "label": "Notes",             "type": "text",   "min_width": "140px"}
+          ],
+          "triggers": [
+            {
+              "id": "UE1_ACTING_PERSONNEL",
+              "match_kind": "any_row_field_equals",
+              "match_field": "status",
+              "match_value": "Acting",
+              "risk_description": "Key personnel in acting positions — risk of management instability and lack of accountability in financial reporting.",
+              "inherent_risk_factor": "Extended acting appointments indicate management instability, which may affect the reliability of internal controls and financial reporting.",
+              "severity": "Medium",
+              "is_pervasive": true,
+              "is_cotabd_specific": false,
+              "assertions": ["Completeness", "Accuracy"]
+            },
+            {
+              "id": "UE1_VACANT_POSITION",
+              "match_kind": "any_row_field_equals",
+              "match_field": "status",
+              "match_value": "Vacant",
+              "risk_description": "Key position vacant — risk of oversight gaps and weakened internal controls.",
+              "inherent_risk_factor": "Vacant key positions create gaps in management oversight and may impair the functioning of internal controls.",
+              "severity": "High",
+              "is_pervasive": true,
+              "is_cotabd_specific": false,
+              "assertions": ["Completeness", "Accuracy"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": 4,
+      "title": "Other Audit Engagements at the Auditee",
+      "guidance": "Document concurrent audit engagements (forensic, compliance, special, donor-mandated). Findings from these may affect the FS audit risk assessment.",
+      "questions": [
+        {
+          "id": "S4_Q1",
+          "ref": "4.1",
+          "type": "table",
+          "text": "Other audit engagements active at the auditee during the period",
+          "columns": [
+            {"key": "engagement_type",     "label": "Type of engagement",          "type": "select", "lookup_code": "OTHER_AUDIT_TYPE", "min_width": "170px"},
+            {"key": "responsible_party",   "label": "Responsible party / Body",    "type": "text",   "min_width": "160px"},
+            {"key": "commencement_date",   "label": "Commencement date",           "type": "date",   "min_width": "130px"},
+            {"key": "status",              "label": "Status",                       "type": "select", "lookup_code": "AUDIT_STATUS", "min_width": "120px"},
+            {"key": "audit_area",          "label": "Audit area affected",         "type": "text",   "min_width": "170px"},
+            {"key": "findings_relevant",   "label": "Findings relevant to FS audit", "type": "text", "min_width": "200px"}
+          ],
+          "triggers": [
+            {
+              "id": "UE1_FORENSIC_INVESTIGATION",
+              "match_kind": "any_row_field_equals",
+              "match_field": "engagement_type",
+              "match_value": "Forensic Audit",
+              "risk_description": "Concurrent forensic investigation at the auditee — fraud risk indicator under ISSAI 2240.",
+              "inherent_risk_factor": "An active forensic investigation indicates potential fraud or material irregularity that may affect the financial statements.",
+              "severity": "High",
+              "is_pervasive": true,
+              "is_cotabd_specific": false,
+              "assertions": ["Occurrence", "Completeness", "Accuracy"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "number": 5,
+      "title": "Risk Identification Summary",
+      "questions": [
+        {
+          "id": "S5_Q1",
+          "ref": "5.1",
+          "type": "calculated",
+          "text": "Were any risks identified during general information procedures?",
+          "calculation": "risk_count_for_workpaper"
+        }
+      ]
+    }
+  ],
+  "required_for_submission": ["S1_Q1", "S1_Q2", "S1_Q3", "S2_Q1"]
+}

@@ -25,6 +25,7 @@ import FRFPage from './pages/workpapers/FRFPage'
 import PE2Page from './pages/workpapers/PE2Page'
 import RA1Page from './pages/workpapers/RA1Page'
 import RA2Page from './pages/workpapers/RA2Page'
+import SchemaPage from './pages/workpapers/SchemaPage'
 import RiskRegisterPage from './pages/risks/RiskRegisterPage'
 import FindingsCollectionPage from './pages/findings/FindingsCollectionPage'
 import ReviewPanel from './pages/reviews/ReviewPanel'
@@ -34,6 +35,10 @@ import ExportPage from './pages/exports/ExportPage'
 // WorkpaperRouter — maps docType → the correct workpaper page
 // UE4 and UE5 registered once their files complete building
 // ─────────────────────────────────────────────────────────────
+// Workpapers that have been migrated to the schema-driven renderer.
+// As each form's JSON schema is authored, move its code to this set.
+const SCHEMA_DRIVEN_CODES = new Set(['UE1'])
+
 const WORKPAPER_PAGES = {
   FRF:   FRFPage,
   PE2:   PE2Page,
@@ -52,7 +57,14 @@ const WORKPAPER_PAGES = {
 
 function WorkpaperRouter() {
   const { docType } = useParams()
-  const PageComponent = WORKPAPER_PAGES[docType?.toUpperCase()]
+  const code = docType?.toUpperCase()
+
+  // Schema-driven path — bypasses the per-form components
+  if (code && SCHEMA_DRIVEN_CODES.has(code)) {
+    return <SchemaPage docCode={code} />
+  }
+
+  const PageComponent = WORKPAPER_PAGES[code]
 
   if (!PageComponent) {
     return (
